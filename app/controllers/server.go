@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"todo_app/config"
+	"wordcollection/config"
 )
 
 func StartAPIServer() error {
