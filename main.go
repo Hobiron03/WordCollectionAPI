@@ -1,7 +1,17 @@
 package main
 
-import "wordcollection/app/controllers"
+import (
+	"fmt"
+	"wordcollection/app/models"
+)
 
 func main() {
-	controllers.StartAPIServer()
+	// controllers.StartAPIServer()
+
+	fmt.Println(models.Db)
+
+	user1 := &models.User{}
+	user1.Name = "first user"
+	user1.PassWord = "test"
+	user1.CreateUser()
 }

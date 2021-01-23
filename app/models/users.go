@@ -18,9 +18,9 @@ func (u *User) CreateUser() (err error) {
 		uuid,
 		name,
 		password,
-		created_at) values (?, ?, ?, ?, ?)`
+		created_at) values (?, ?, ?, ?)`
 
-	_, err = Db.Exec(cmd, createUUID(), u.Name, Encrypt(u.PassWord), time.Now())
+	_, err = Db.Exec(cmd, CreateUUID(), u.Name, Encrypt(u.PassWord), time.Now())
 
 	if err != nil {
 		log.Fatalln(err)
