@@ -45,7 +45,7 @@ func (u *User) GetUserWordAll() (words []Word, err error) {
 
 func (w *Word) UpdateTodo() (err error) {
 	cmd := `update words set word = ?, mean = ?, pronounce = ?, genre = ?, color = ?`
-	_, err := Db.Exec(cmd, w.Word, w.Mean, w.Pronounce, w.Genre, w.Color)
+	_, err = Db.Exec(cmd, w.Word, w.Mean, w.Pronounce, w.Genre, w.Color)
 	if err != nil {
 		log.Fatalln(err)
 	}
