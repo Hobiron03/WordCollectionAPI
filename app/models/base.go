@@ -30,15 +30,18 @@ func init() {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		uuid STRING NOT NULL UNIQUE,
 		name STRING,
-		email STRING,
 		password STRING,
 		created_at DATETIME)`, tableNameUser)
 	Db.Exec(cmdU)
 
 	cmdW := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		content TEXT,
 		user_id INTEGER,
+		word TEXT,
+		mean TEXT,
+		pronounce TEXT,
+		genre TEXT,
+		color TEXT,
 		created_at DATETIME)`, tableNameWord)
 	Db.Exec(cmdW)
 
