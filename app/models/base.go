@@ -32,7 +32,10 @@ func init() {
 		name STRING,
 		password STRING,
 		created_at DATETIME)`, tableNameUser)
-	Db.Exec(cmdU)
+	_, err = Db.Exec(cmdU)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	cmdW := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +46,10 @@ func init() {
 		genre TEXT,
 		color TEXT,
 		created_at DATETIME)`, tableNameWord)
-	Db.Exec(cmdW)
+	_, err = Db.Exec(cmdW)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 }
 
