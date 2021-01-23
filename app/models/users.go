@@ -6,11 +6,11 @@ import (
 )
 
 type User struct {
-	ID        int
-	UUID      string
-	Name      string
-	PassWord  string
-	CreatedAt time.Time
+	ID        int       `json:"id"`
+	UUID      string    `json:"uuid"`
+	Name      string    `json:"name"`
+	PassWord  string    `json:"password"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (u *User) CreateUser() (err error) {

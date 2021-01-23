@@ -6,13 +6,13 @@ import (
 )
 
 type Word struct {
-	ID        int
-	UserID    int
-	Word      string
-	Mean      string
-	Pronounce string
-	Genre     string
-	Color     string
+	ID        int    `json:"id"`
+	UserID    int    `json:"user_id"`
+	Word      string `json:"word"`
+	Mean      string `json:"mean"`
+	Pronounce string `json:"pronounce"`
+	Genre     string `json:"genre"`
+	Color     string `json:"color"`
 }
 
 func (u *User) CreateWord(word string, mean string, pronounce string, genre string, color string) (err error) {
