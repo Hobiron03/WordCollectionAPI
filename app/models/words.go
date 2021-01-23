@@ -42,3 +42,23 @@ func (u *User) GetUserWordAll() (words []Word, err error) {
 
 	return words, err
 }
+
+func (w *Word) UpdateTodo() (err error) {
+	cmd := `update words set word = ?, mean = ?, pronounce = ?, genre = ?, color = ?`
+	_, err := Db.Exec(cmd, w.Word, w.Mean, w.Pronounce, w.Genre, w.Color)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return err
+}
+
+func (w *Word) DeleteTodo() (err error) {
+	cmd := `delete from words where id = ?`
+	_, err = Db.Exec(cmd, w.ID)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return err
+}
