@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"todo_app/config"
+	"wordcollection/config"
 
 	"github.com/google/uuid"
 	_ "github.com/mattn/go-sqlite3"
