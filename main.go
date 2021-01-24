@@ -2,6 +2,7 @@ package main
 
 func main() {
 	// controllers.StartAPIServer()
+
 	// fmt.Println(models.Db)
 
 	// userの作成例
@@ -18,4 +19,9 @@ func main() {
 	// wordの取得例
 	// word, _ := models.GetWord(2)
 	// fmt.Println(word)
+
+	// // wordの更新例
+	// word.Word = "dfadfaa"
+	// word.Mean = "更新してみた"
+	// word.UpdateWord()
 }
