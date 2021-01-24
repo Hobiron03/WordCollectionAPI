@@ -4,7 +4,6 @@ import "wordcollection/app/controllers"
 
 func main() {
 	controllers.StartAPIServer()
-
 	// fmt.Println(models.Db)
 	// user1 := &models.User{}
 	// user1.Name = "first user2"
