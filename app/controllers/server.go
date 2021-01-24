@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"wordcollection/app/models"
 	"wordcollection/config"
 )
 
@@ -24,8 +27,16 @@ func StartAPIServer() error {
 }
 
 func topHandler(w http.ResponseWriter, r *http.Request) {
+	// http jsonを返す例
+	word, _ := models.GetWord(2)
+
+	v, err := json.Marshal(word)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	w.Write(v)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -54,8 +65,7 @@ func deleteUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
