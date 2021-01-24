@@ -18,6 +18,7 @@ func StartAPIServer() error {
 	http.HandleFunc("/signup", signupHandler)
 	http.HandleFunc("/signin", signinHandler)
 	http.HandleFunc("/logout", logoutHandler)
+	http.HandleFunc("/validation", logoutHandler)
 
 	return http.ListenAndServe(":"+config.Config.Port, nil)
 }
@@ -68,6 +69,11 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Println("TopHandler")
+}
+
+func varidation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("TopHandler")
 }

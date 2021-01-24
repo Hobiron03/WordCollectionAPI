@@ -43,6 +43,26 @@ func (u *User) GetUserWordAll() (words []Word, err error) {
 	return words, err
 }
 
+//todo: id指定でwordsモデルから任意のwordを取り出す
+func GetWord(id int) (word Word, err error) {
+	cmd := `select id, user_id, word, mean, pronounce, genre, color from words where id = ?`
+
+	err = Db.QueryRow(cmd, id).Scan(
+		&word.ID,
+		&word.UserID,
+		&word.Word,
+		&word.Mean,
+		&word.Pronounce,
+		&word.Genre,
+		&word.Color,
+	)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return word, err
+}
+
 func (w *Word) UpdateTodo() (err error) {
 	cmd := `update words set word = ?, mean = ?, pronounce = ?, genre = ?, color = ?`
 	_, err = Db.Exec(cmd, w.Word, w.Mean, w.Pronounce, w.Genre, w.Color)
