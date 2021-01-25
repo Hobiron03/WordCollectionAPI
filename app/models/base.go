@@ -29,7 +29,7 @@ func init() {
 	cmdU := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		uuid STRING NOT NULL UNIQUE,
-		name STRING,
+		name STRING UNIQUE,
 		password STRING,
 		created_at DATETIME)`, tableNameUser)
 	_, err = Db.Exec(cmdU)

@@ -5,3 +5,4 @@
 2021/01/23 20:42:26 words.go:20: 5 values for 7 columns
 2021/01/23 20:42:59 words.go:20: not enough args to execute query: want 7 got 6
 2021/01/25 01:24:53 words.go:69: not enough args to execute query: want 6 got 5
+2021/01/25 23:27:44 users.go:26: UNIQUE constraint failed: users.name

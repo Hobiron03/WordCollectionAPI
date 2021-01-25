@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"wordcollection/config"
@@ -10,6 +11,15 @@ import (
 
 type JWT struct {
 	Token string `json:"token"`
+}
+
+type Error struct {
+	Message string
+}
+
+func respondWithError(w http.ResponseWriter, status int, error Error) {
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(error)
 }
 
 func StartAPIServer() error {
