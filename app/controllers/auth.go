@@ -127,7 +127,7 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("TopHandler")
 }
 
-func varidation(w http.ResponseWriter, r *http.Request) {
+func validation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("TopHandler")
 }
