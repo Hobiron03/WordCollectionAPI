@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"wordcollection/config"
+
+	"github.com/gorilla/mux"
 )
 
 type JWT struct {
@@ -12,22 +14,26 @@ type JWT struct {
 
 func StartAPIServer() error {
 
-	http.HandleFunc("/", topHandler)
-	http.HandleFunc("/fetchmyword", fetchMyWordHandler)
-	http.HandleFunc("/addmyword", addMyWordHandler)
-	http.HandleFunc("/deletemyword", deleteMyWordHandler)
-	http.HandleFunc("/alldeletemyword", allDeleteMyWordHandler)
-	http.HandleFunc("/updatemyword", updateMyWordHandler)
-	http.HandleFunc("/deleteuser", deleteUserHandler)
-	http.HandleFunc("/signup", signupHandler)
-	http.HandleFunc("/signin", signinHandler)
-	http.HandleFunc("/logout", logoutHandler)
-	http.HandleFunc("/validation", logoutHandler)
+	router := mux.NewRouter()
 
-	return http.ListenAndServe(":"+config.Config.Port, nil)
+	router.HandleFunc("/", topHandler)
+	router.HandleFunc("/fetchmyword", fetchMyWordHandler)
+	router.HandleFunc("/addmyword", addMyWordHandler)
+	router.HandleFunc("/deletemyword", deleteMyWordHandler)
+	router.HandleFunc("/alldeletemyword", allDeleteMyWordHandler)
+	router.HandleFunc("/updatemyword", updateMyWordHandler)
+	router.HandleFunc("/deleteuser", deleteUserHandler)
+	router.HandleFunc("/signup", signupHandler).Methods("POST")
+	router.HandleFunc("/signin", signinHandler)
+	router.HandleFunc("/logout", logoutHandler)
+	router.HandleFunc("/validation", logoutHandler)
+
+	return http.ListenAndServe(":"+config.Config.Port, router)
 }
 
 func topHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Println("TopHandler")
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,26 +63,6 @@ func deleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
 
-}
-
-func signupHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
-}
-
-func signinHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
-}
-
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
-}
-
-func varidation(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
 }
 
 func TokenVerifyMiddleWare(next http.HandlerFunc) http.HandlerFunc {
