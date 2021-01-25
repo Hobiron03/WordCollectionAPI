@@ -27,14 +27,14 @@ func StartAPIServer() error {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", topHandler)
-	router.HandleFunc("/fetchmyword", fetchMyWordHandler)
+	router.HandleFunc("/fetchmyword", TokenVerifyMiddleWare(fetchMyWordHandler))
 	router.HandleFunc("/addmyword", addMyWordHandler)
 	router.HandleFunc("/deletemyword", deleteMyWordHandler)
 	router.HandleFunc("/alldeletemyword", allDeleteMyWordHandler)
 	router.HandleFunc("/updatemyword", updateMyWordHandler)
 	router.HandleFunc("/deleteuser", deleteUserHandler)
 	router.HandleFunc("/signup", signupHandler).Methods("POST")
-	router.HandleFunc("/signin", signinHandler)
+	router.HandleFunc("/signin", signinHandler).Methods("POST")
 	router.HandleFunc("/logout", logoutHandler)
 	router.HandleFunc("/validation", logoutHandler)
 
@@ -76,5 +76,11 @@ func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func TokenVerifyMiddleWare(next http.HandlerFunc) http.HandlerFunc {
-	return nil
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// var errorObject Error
+		authHeader := r.Header.Get("Authorization")
+		fmt.Println(authHeader)
+	})
+
+	// return nil
 }

@@ -95,8 +95,6 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 
 	password := authFrom.PassWord
 	row := models.Db.QueryRow("select * from users where name=$1", authFrom.Username)
-	fmt.Println("row")
-	fmt.Println(row)
 	err := row.Scan(&user.ID, &user.UUID, &user.Name, &user.PassWord, &user.CreatedAt)
 
 	if err != nil {
@@ -105,7 +103,6 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 			respondWithError(w, http.StatusBadRequest, error)
 			return
 		} else {
-			fmt.Println("else error")
 			log.Fatalln(err)
 		}
 	}
