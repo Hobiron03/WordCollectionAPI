@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
+	"wordcollection/app/models"
 	"wordcollection/config"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
 
@@ -42,13 +45,19 @@ func StartAPIServer() error {
 }
 
 func topHandler(w http.ResponseWriter, r *http.Request) {
+	user := models.User{}
+	user.Name = "成功！！"
+	user.PassWord = "成功！！"
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	responseJSON(w, user)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
+	user := models.User{}
+	user.Name = "成功！！"
+	user.PassWord = "成功！！"
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	responseJSON(w, user)
 }
 
 func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,10 +86,38 @@ func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
 
 func TokenVerifyMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// var errorObject Error
+		var errorObject Error
 		authHeader := r.Header.Get("Authorization")
-		fmt.Println(authHeader)
-	})
+		bearerToken := strings.Split(authHeader, " ")
 
-	// return nil
+		if len(bearerToken) == 2 {
+			authToken := bearerToken[1]
+
+			token, error := jwt.Parse(authToken, func(token *jwt.Token) (interface{}, error) {
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					return nil, fmt.Errorf("エラー発生")
+				}
+				return []byte("secret"), nil
+			})
+
+			if error != nil {
+				errorObject.Message = error.Error()
+				respondWithError(w, http.StatusUnauthorized, errorObject)
+				return
+			}
+
+			if token.Valid {
+				next.ServeHTTP(w, r)
+			} else {
+				errorObject.Message = error.Error()
+				respondWithError(w, http.StatusUnauthorized, errorObject)
+				return
+			}
+		} else {
+			errorObject.Message = "tokenが正しくありません"
+			respondWithError(w, http.StatusUnauthorized, errorObject)
+			return
+		}
+
+	})
 }
