@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"wordcollection/app/models"
 )
 
 type AuthFrom struct {
 	Username string `json:"username"`
-	Password string `json:"password"`
+	PassWord string `json:"password"`
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,16 +23,27 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if authFrom.Password == "" {
+	if authFrom.PassWord == "" {
 		error.Message = "パスワードが入力されていません。"
 		respondWithError(w, http.StatusBadRequest, error)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//register new user to database
+	//create new user & register to database
+	newUser := &models.User{}
+	newUser.Name = authFrom.Username
+	newUser.PassWord = authFrom.PassWord
+	err := newUser.CreateUser()
+	if err != nil {
+		error.Message = "すでにその名前は使用されています"
+		respondWithError(w, http.StatusInternalServerError, error)
+		return
+	}
 
 	// gererate jwt token & return token
+	w.Header().Set("Content-Type", "application/json")
+	// responseJSON(w, newUser)
 }
 
 func signinHandler(w http.ResponseWriter, r *http.Request) {

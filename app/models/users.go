@@ -22,9 +22,6 @@ func (u *User) CreateUser() (err error) {
 
 	_, err = Db.Exec(cmd, CreateUUID(), u.Name, Encrypt(u.PassWord), time.Now())
 
-	if err != nil {
-		log.Fatalln(err)
-	}
 	return err
 }
 

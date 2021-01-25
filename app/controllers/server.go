@@ -22,6 +22,10 @@ func respondWithError(w http.ResponseWriter, status int, error Error) {
 	json.NewEncoder(w).Encode(error)
 }
 
+func responseJSON(w http.ResponseWriter, data interface{}) {
+	json.NewEncoder(w).Encode(data)
+}
+
 func StartAPIServer() error {
 
 	router := mux.NewRouter()
