@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
-	"wordcollection/app/models"
 	"wordcollection/config"
 )
+
+type JWT struct {
+	Token string `json:"token"`
+}
 
 func StartAPIServer() error {
 
@@ -27,16 +28,6 @@ func StartAPIServer() error {
 }
 
 func topHandler(w http.ResponseWriter, r *http.Request) {
-	// http jsonを返す例
-	word, _ := models.GetWord(2)
-
-	v, err := json.Marshal(word)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(v)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -86,4 +77,8 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 func varidation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("TopHandler")
+}
+
+func TokenVerifyMiddleWare(next http.HandlerFunc) http.HandlerFunc {
+	return nil
 }
