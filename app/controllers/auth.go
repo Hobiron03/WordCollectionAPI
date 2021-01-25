@@ -16,6 +16,10 @@ type AuthFrom struct {
 	PassWord string `json:"password"`
 }
 
+type JWT struct {
+	Token string `json:"token"`
+}
+
 func GenerateToken(username string) string {
 	var err error
 	secret := "secret"
@@ -35,6 +39,7 @@ func GenerateToken(username string) string {
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
 	var authFrom AuthFrom
+	var jwt JWT
 	var error Error
 
 	json.NewDecoder(r.Body).Decode(&authFrom)
@@ -64,14 +69,14 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 
 	// gererate jwt token & return token
 	w.Header().Set("Content-Type", "application/json")
-	jwt := GenerateToken(newUser.Name)
+	jwt.Token = GenerateToken(newUser.Name)
 	responseJSON(w, jwt)
 }
 
 func signinHandler(w http.ResponseWriter, r *http.Request) {
 	var authFrom AuthFrom
 	user := models.User{}
-	// var jwt JWT
+	var jwt JWT
 	var error Error
 
 	json.NewDecoder(r.Body).Decode(&authFrom)
@@ -112,7 +117,7 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jwt := GenerateToken(user.Name)
+	jwt.Token = GenerateToken(user.Name)
 
 	responseJSON(w, jwt)
 }

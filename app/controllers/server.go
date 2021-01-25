@@ -9,10 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type JWT struct {
-	Token string `json:"token"`
-}
-
 type Error struct {
 	Message string
 }
