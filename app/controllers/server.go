@@ -25,6 +25,15 @@ type WordID struct {
 	ID int
 }
 
+type WordEdit struct {
+	ID        int
+	Word      string
+	Pronounce string
+	Mean      string
+	Genre     string
+	Color     string
+}
+
 type AddEditWordPost struct {
 	Username  string
 	Word      string
@@ -116,7 +125,28 @@ func deleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
 
+func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
+	var postedWord models.Word
+	json.NewDecoder(r.Body).Decode(&postedWord)
+
+	word, err := models.GetWord(postedWord.ID)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	word.Word = postedWord.Word
+	word.Mean = postedWord.Mean
+	word.Pronounce = postedWord.Pronounce
+	word.Genre = postedWord.Genre
+	word.Color = postedWord.Color
+	err = word.UpdateWord()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func allDeleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -127,10 +157,6 @@ func allDeleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
 func deleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("TopHandler")
-}
-
-func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
-
 }
 
 func TokenVerifyMiddleWare(next http.HandlerFunc) http.HandlerFunc {
