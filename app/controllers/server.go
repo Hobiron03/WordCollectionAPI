@@ -66,7 +66,6 @@ func StartAPIServer() error {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", top)
 	router.HandleFunc("/fetchmyword", TokenVerifyMiddleWare(fetchMyWordHandler)).Methods("POST")
 	router.HandleFunc("/addmyword", TokenVerifyMiddleWare(addMyWordHandler))
 	router.HandleFunc("/deletemyword", TokenVerifyMiddleWare(deleteMyWordHandler))
@@ -87,16 +86,7 @@ func StartAPIServer() error {
 	})
 
 	handler := c.Handler(router)
-
 	return http.ListenAndServe(":"+config.Config.Port, handler)
-}
-
-func top(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
-	// ここを追加
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.WriteHeader(http.StatusOK)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -141,8 +131,6 @@ func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	//todo: id返してあげないとダメ
 	wordID.ID, _ = user.GetNewestWordID()
 	responseJSON(w, wordID)
 }
