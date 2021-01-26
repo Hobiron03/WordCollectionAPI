@@ -1,2 +1,8 @@
 2021/01/26 14:46:22 server.go:83: sql: no rows in result set
 2021/01/26 14:51:53 server.go:82: sql: no rows in result set
+2021/01/26 16:33:32 server.go:3061: http: superfluous response.WriteHeader call from wordcollection/app/controllers.signupHandler (auth.go:68)
+2021/01/26 16:34:33 server.go:3061: http: superfluous response.WriteHeader call from wordcollection/app/controllers.signupHandler (auth.go:50)
+2021/01/26 16:34:51 server.go:3061: http: superfluous response.WriteHeader call from wordcollection/app/controllers.signupHandler (auth.go:50)
+2021/01/26 16:35:41 server.go:3061: http: superfluous response.WriteHeader call from wordcollection/app/controllers.signupHandler (auth.go:50)
+2021/01/26 16:37:02 server.go:3061: http: superfluous response.WriteHeader call from wordcollection/app/controllers.signupHandler (auth.go:50)
+2021/01/26 16:38:06 server.go:3061: http: superfluous response.WriteHeader call from wordcollection/app/controllers.signupHandler (auth.go:50)

@@ -44,18 +44,27 @@ type AddEditWordPost struct {
 }
 
 func respondWithError(w http.ResponseWriter, status int, error Error) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(error)
 }
 
 func responseJSON(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	json.NewEncoder(w).Encode(data)
+
 }
 
 func StartAPIServer() error {
 
 	router := mux.NewRouter()
 
+	router.HandleFunc("/", top)
 	router.HandleFunc("/fetchmyword", TokenVerifyMiddleWare(fetchMyWordHandler))
 	router.HandleFunc("/addmyword", TokenVerifyMiddleWare(addMyWordHandler))
 	router.HandleFunc("/deletemyword", TokenVerifyMiddleWare(deleteMyWordHandler))
@@ -64,9 +73,17 @@ func StartAPIServer() error {
 	router.HandleFunc("/deleteuser", TokenVerifyMiddleWare(deleteUserHandler))
 	router.HandleFunc("/signup", signupHandler).Methods("POST")
 	router.HandleFunc("/signin", signinHandler).Methods("POST")
-	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation))
+	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation)).Methods("GET")
 
 	return http.ListenAndServe(":"+config.Config.Port, router)
+}
+
+func top(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	// ここを追加
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.WriteHeader(http.StatusOK)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {

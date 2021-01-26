@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -43,7 +43,9 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	var jwt JWT
 	var error Error
 
-	json.NewDecoder(r.Body).Decode(&authFrom)
+	// json.NewDecoder(r.Body).Decode(&authFrom)
+	authFrom.Username = r.FormValue("username")
+	authFrom.PassWord = r.FormValue("password")
 	if authFrom.Username == "" {
 		error.Message = "ユーザネームが入力されていません。"
 		respondWithError(w, http.StatusBadRequest, error)
@@ -53,11 +55,9 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	if authFrom.PassWord == "" {
 		error.Message = "パスワードが入力されていません。"
 		respondWithError(w, http.StatusBadRequest, error)
-		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//create new user & register to database
 	newUser := &models.User{}
 	newUser.Name = authFrom.Username
 	newUser.PassWord = authFrom.PassWord
@@ -68,9 +68,9 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// gererate jwt token & return token
-	w.Header().Set("Content-Type", "application/json")
 	jwt.Token = GenerateToken(newUser.Name)
+	fmt.Println("endup")
+
 	responseJSON(w, jwt)
 }
 
@@ -80,7 +80,8 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	var jwt JWT
 	var error Error
 
-	json.NewDecoder(r.Body).Decode(&authFrom)
+	authFrom.Username = r.FormValue("username")
+	authFrom.PassWord = r.FormValue("password")
 	if authFrom.Username == "" {
 		error.Message = "ユーザネームが入力されていません。"
 		respondWithError(w, http.StatusBadRequest, error)
@@ -90,7 +91,6 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	if authFrom.PassWord == "" {
 		error.Message = "パスワードが入力されていません。"
 		respondWithError(w, http.StatusBadRequest, error)
-		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -116,10 +116,19 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jwt.Token = GenerateToken(user.Name)
+	fmt.Println("endin")
 
 	responseJSON(w, jwt)
 }
 
 func validation(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+
+	if r.Method == "OPTIONS" {
+		fmt.Println("opetions")
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "origin")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
 }
