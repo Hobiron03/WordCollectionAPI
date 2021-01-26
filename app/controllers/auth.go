@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 	"wordcollection/app/models"
 
 	"github.com/dgrijalva/jwt-go"
@@ -26,6 +27,7 @@ func GenerateToken(username string) string {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": username,
+		"exp":      time.Now().Add(time.Hour * 48).Unix(), //2日有効とする
 		"iss":      "course",
 	})
 
@@ -119,6 +121,7 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, jwt)
 }
 
+//これいらない説ある。ログアウト時にはフロント側でjwtを破棄すればできる
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("TopHandler")

@@ -45,11 +45,7 @@ func StartAPIServer() error {
 }
 
 func topHandler(w http.ResponseWriter, r *http.Request) {
-	user := models.User{}
-	user.Name = "成功！！"
-	user.PassWord = "成功！！"
-	w.Header().Set("Content-Type", "application/json")
-	responseJSON(w, user)
+
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
