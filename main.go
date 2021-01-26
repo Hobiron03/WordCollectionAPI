@@ -1,7 +1,9 @@
 package main
 
+import "wordcollection/app/controllers"
+
 func main() {
-	// 	controllers.StartAPIServer()
+	controllers.StartAPIServer()
 
 	// fmt.Println(models.Db)
 

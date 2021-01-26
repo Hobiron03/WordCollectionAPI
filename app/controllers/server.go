@@ -112,14 +112,12 @@ func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	fmt.Println("fetchMyWordHandler")
-	fmt.Println(words)
 	responseJSON(w, words)
 }
 
 func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	var addEditWordPost AddEditWordPost
+	var wordID WordID
 
 	addEditWordPost.Username = r.FormValue("username")
 	addEditWordPost.Word = r.FormValue("word")
@@ -145,14 +143,13 @@ func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//todo: id返してあげないとダメ
-	// responseJSON(w)
-
-	w.WriteHeader(http.StatusOK)
+	wordID.ID, _ = user.GetNewestWordID()
+	responseJSON(w, wordID)
 }
 
 func deleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	var wordID WordID
-	json.NewDecoder(r.Body).Decode(&wordID)
+	wordID.ID, _ = strconv.Atoi(r.FormValue("id"))
 
 	word, err := models.GetWord(wordID.ID)
 	if err != nil {
