@@ -26,7 +26,7 @@ func (u *User) CreateWord(word string, mean string, pronounce string, genre stri
 	return err
 }
 
-func (u *User) GetUserWordAll() (words []Word, err error) {
+func (u *User) GetWordAll() (words []Word, err error) {
 	cmd := `select id, user_id, word, mean, pronounce, genre, color from words where user_id = ?`
 	rows, err := Db.Query(cmd, u.ID)
 

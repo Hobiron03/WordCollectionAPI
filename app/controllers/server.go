@@ -3,8 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
+	"wordcollection/app/models"
 	"wordcollection/config"
 
 	"github.com/dgrijalva/jwt-go"
@@ -18,6 +20,10 @@ type Error struct {
 func respondWithError(w http.ResponseWriter, status int, error Error) {
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(error)
+}
+
+type Username struct {
+	Username string
 }
 
 func responseJSON(w http.ResponseWriter, data interface{}) {
@@ -48,11 +54,20 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
-	// user := models.User{}
-	// user.Name = "成功！！"
-	// user.PassWord = "成功！！"
-	// w.Header().Set("Content-Type", "application/json")
-	// responseJSON(w, user)
+	var username Username
+	json.NewDecoder(r.Body).Decode(&username)
+
+	user, err := models.GetUserByName(username.Username)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	words, err := user.GetWordAll()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	responseJSON(w, words)
 }
 
 func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
