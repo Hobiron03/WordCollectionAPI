@@ -1,9 +1,7 @@
 package main
 
-import "wordcollection/app/controllers"
-
 func main() {
-	controllers.StartAPIServer()
+	// 	controllers.StartAPIServer()
 
 	// fmt.Println(models.Db)
 
@@ -14,9 +12,9 @@ func main() {
 	// user1.CreateUser()
 
 	//userの取得例 & wordの追加例
-	// user, _ := models.GetUser(1)
-	// user.CreateWord("word23232", "mean2", "pronounce2", "genre2", "colo2")
-	// fmt.Println(user.GetUserWordAll())
+	// user, _ := models.GetUserByID(1)
+	// // user.CreateWord("neww2222", "mean2", "pronounce2", "genre2", "colo2")
+	// fmt.Println(user.GetNewestWordID())
 
 	//userの取得例2
 	// user, _ := models.GetUserByName("first user")

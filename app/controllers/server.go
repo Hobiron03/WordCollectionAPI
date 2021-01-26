@@ -24,7 +24,7 @@ type Username struct {
 }
 
 type WordID struct {
-	ID int
+	ID int `json:"id"`
 }
 
 type WordEdit struct {
@@ -140,12 +140,13 @@ func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 		addEditWordPost.Genre,
 		addEditWordPost.Color,
 	)
-
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	//todo: id返してあげないとダメ
+	// responseJSON(w)
+
 	w.WriteHeader(http.StatusOK)
 }
 

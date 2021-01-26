@@ -62,6 +62,14 @@ func GetWord(id int) (word Word, err error) {
 	return word, err
 }
 
+func (u *User) GetNewestWordID() (id int, err error) {
+	var newestID int
+	cmd := `select MAX(id) from words where user_id = ?`
+	err = Db.QueryRow(cmd, u.ID).Scan(&newestID)
+
+	return newestID, err
+}
+
 func (w *Word) UpdateWord() (err error) {
 	cmd := `update words set word = ?, mean = ?, pronounce = ?, genre = ?, color = ? where id = ?`
 	_, err = Db.Exec(cmd, w.Word, w.Mean, w.Pronounce, w.Genre, w.Color, w.ID)
