@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"wordcollection/app/models"
 	"wordcollection/config"
@@ -144,6 +145,7 @@ func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
+	//todo: id返してあげないとダメ
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -166,7 +168,13 @@ func deleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
 
 func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	var postedWord models.Word
-	json.NewDecoder(r.Body).Decode(&postedWord)
+
+	postedWord.ID, _ = strconv.Atoi(r.FormValue("id"))
+	postedWord.Word = r.FormValue("word")
+	postedWord.Pronounce = r.FormValue("pronounce")
+	postedWord.Mean = r.FormValue("mean")
+	postedWord.Genre = r.FormValue("genre")
+	postedWord.Color = r.FormValue("color")
 
 	word, err := models.GetWord(postedWord.ID)
 	if err != nil {

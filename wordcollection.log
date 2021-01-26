@@ -11,3 +11,5 @@
 2021/01/27 00:45:23 server.go:132: sql: no rows in result set
 2021/01/27 00:49:39 server.go:132: sql: no rows in result set
 2021/01/27 00:50:13 server.go:132: sql: no rows in result set
+2021/01/27 01:05:46 words.go:59: sql: no rows in result set
+2021/01/27 01:07:31 words.go:59: sql: no rows in result set
