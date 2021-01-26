@@ -21,6 +21,10 @@ type Username struct {
 	Username string
 }
 
+type WordID struct {
+	ID int
+}
+
 type AddEditWordPost struct {
 	Username  string
 	Word      string
@@ -51,7 +55,6 @@ func StartAPIServer() error {
 	router.HandleFunc("/deleteuser", TokenVerifyMiddleWare(deleteUserHandler))
 	router.HandleFunc("/signup", signupHandler).Methods("POST")
 	router.HandleFunc("/signin", signinHandler).Methods("POST")
-	router.HandleFunc("/logout", logoutHandler)
 	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation))
 
 	return http.ListenAndServe(":"+config.Config.Port, router)
@@ -99,8 +102,21 @@ func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	var wordID WordID
+	json.NewDecoder(r.Body).Decode(&wordID)
+
+	word, err := models.GetWord(wordID.ID)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = word.DeleteWord()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
 }
 
 func allDeleteMyWordHandler(w http.ResponseWriter, r *http.Request) {

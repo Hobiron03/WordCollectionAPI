@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -119,12 +118,6 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	jwt.Token = GenerateToken(user.Name)
 
 	responseJSON(w, jwt)
-}
-
-//これいらない説ある。ログアウト時にはフロント側でjwtを破棄すればできる
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
 }
 
 func validation(w http.ResponseWriter, r *http.Request) {
