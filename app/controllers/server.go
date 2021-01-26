@@ -17,13 +17,22 @@ type Error struct {
 	Message string
 }
 
+type Username struct {
+	Username string
+}
+
+type AddEditWordPost struct {
+	Username  string
+	Word      string
+	Pronounce string
+	Mean      string
+	Genre     string
+	Color     string
+}
+
 func respondWithError(w http.ResponseWriter, status int, error Error) {
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(error)
-}
-
-type Username struct {
-	Username string
 }
 
 func responseJSON(w http.ResponseWriter, data interface{}) {
@@ -34,23 +43,18 @@ func StartAPIServer() error {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", topHandler)
 	router.HandleFunc("/fetchmyword", TokenVerifyMiddleWare(fetchMyWordHandler))
-	router.HandleFunc("/addmyword", addMyWordHandler)
-	router.HandleFunc("/deletemyword", deleteMyWordHandler)
-	router.HandleFunc("/alldeletemyword", allDeleteMyWordHandler)
-	router.HandleFunc("/updatemyword", updateMyWordHandler)
-	router.HandleFunc("/deleteuser", deleteUserHandler)
+	router.HandleFunc("/addmyword", TokenVerifyMiddleWare(addMyWordHandler))
+	router.HandleFunc("/deletemyword", TokenVerifyMiddleWare(deleteMyWordHandler))
+	router.HandleFunc("/alldeletemyword", TokenVerifyMiddleWare(allDeleteMyWordHandler))
+	router.HandleFunc("/updatemyword", TokenVerifyMiddleWare(updateMyWordHandler))
+	router.HandleFunc("/deleteuser", TokenVerifyMiddleWare(deleteUserHandler))
 	router.HandleFunc("/signup", signupHandler).Methods("POST")
 	router.HandleFunc("/signin", signinHandler).Methods("POST")
 	router.HandleFunc("/logout", logoutHandler)
 	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation))
 
 	return http.ListenAndServe(":"+config.Config.Port, router)
-}
-
-func topHandler(w http.ResponseWriter, r *http.Request) {
-
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -71,8 +75,27 @@ func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	var addEditWordPost AddEditWordPost
+	json.NewDecoder(r.Body).Decode(&addEditWordPost)
+
+	user, err := models.GetUserByName(addEditWordPost.Username)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = user.CreateWord(
+		addEditWordPost.Word,
+		addEditWordPost.Mean,
+		addEditWordPost.Pronounce,
+		addEditWordPost.Genre,
+		addEditWordPost.Color,
+	)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func deleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
