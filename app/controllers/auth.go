@@ -116,19 +116,16 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jwt.Token = GenerateToken(user.Name)
-	fmt.Println("endin")
-
 	responseJSON(w, jwt)
 }
 
 func validation(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == "OPTIONS" {
-		fmt.Println("opetions")
-	}
+	fmt.Println(r.Method)
 
-	w.Header().Set("Access-Control-Allow-Origin", "origin")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, TRACE, PATCH, CONNECT")
+	w.WriteHeader(200)
 }

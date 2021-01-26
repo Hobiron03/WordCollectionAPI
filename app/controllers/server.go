@@ -11,6 +11,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 type Error struct {
@@ -44,7 +45,7 @@ type AddEditWordPost struct {
 }
 
 func respondWithError(w http.ResponseWriter, status int, error Error) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	w.WriteHeader(status)
@@ -52,8 +53,8 @@ func respondWithError(w http.ResponseWriter, status int, error Error) {
 }
 
 func responseJSON(w http.ResponseWriter, data interface{}) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	json.NewEncoder(w).Encode(data)
@@ -65,7 +66,7 @@ func StartAPIServer() error {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", top)
-	router.HandleFunc("/fetchmyword", TokenVerifyMiddleWare(fetchMyWordHandler))
+	router.HandleFunc("/fetchmyword", TokenVerifyMiddleWare(fetchMyWordHandler)).Methods("POST")
 	router.HandleFunc("/addmyword", TokenVerifyMiddleWare(addMyWordHandler))
 	router.HandleFunc("/deletemyword", TokenVerifyMiddleWare(deleteMyWordHandler))
 	router.HandleFunc("/alldeletemyword", TokenVerifyMiddleWare(allDeleteMyWordHandler))
@@ -73,9 +74,20 @@ func StartAPIServer() error {
 	router.HandleFunc("/deleteuser", TokenVerifyMiddleWare(deleteUserHandler))
 	router.HandleFunc("/signup", signupHandler).Methods("POST")
 	router.HandleFunc("/signin", signinHandler).Methods("POST")
-	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation)).Methods("GET")
+	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation)).Methods("GET", "OPTIONS")
 
-	return http.ListenAndServe(":"+config.Config.Port, router)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: false,
+		AllowedHeaders:   []string{"Authorization"},
+		// Enable Debugging for testing, consider disabling in production
+		Debug:              true,
+		OptionsPassthrough: false,
+	})
+
+	handler := c.Handler(router)
+
+	return http.ListenAndServe(":"+config.Config.Port, handler)
 }
 
 func top(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +100,7 @@ func top(w http.ResponseWriter, r *http.Request) {
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	var username Username
-	json.NewDecoder(r.Body).Decode(&username)
+	username.Username = r.FormValue("username")
 
 	user, err := models.GetUserByName(username.Username)
 	if err != nil {
@@ -100,12 +112,20 @@ func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
+	fmt.Println("fetchMyWordHandler")
+	fmt.Println(words)
 	responseJSON(w, words)
 }
 
 func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
 	var addEditWordPost AddEditWordPost
-	json.NewDecoder(r.Body).Decode(&addEditWordPost)
+
+	addEditWordPost.Username = r.FormValue("username")
+	addEditWordPost.Word = r.FormValue("word")
+	addEditWordPost.Pronounce = r.FormValue("pronounce")
+	addEditWordPost.Mean = r.FormValue("mean")
+	addEditWordPost.Genre = r.FormValue("genre")
+	addEditWordPost.Color = r.FormValue("color")
 
 	user, err := models.GetUserByName(addEditWordPost.Username)
 	if err != nil {
