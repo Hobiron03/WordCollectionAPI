@@ -198,8 +198,11 @@ func allDeleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteUserHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	var name string
+	name = r.FormValue("username")
+
+	user, _ := models.GetUserByName(name)
+	user.DeleteUser()
 }
 
 func TokenVerifyMiddleWare(next http.HandlerFunc) http.HandlerFunc {
