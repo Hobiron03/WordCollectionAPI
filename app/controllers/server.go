@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"wordcollection/app/models"
 	"wordcollection/config"
 
 	"github.com/dgrijalva/jwt-go"
@@ -39,7 +38,7 @@ func StartAPIServer() error {
 	router.HandleFunc("/signup", signupHandler).Methods("POST")
 	router.HandleFunc("/signin", signinHandler).Methods("POST")
 	router.HandleFunc("/logout", logoutHandler)
-	router.HandleFunc("/validation", logoutHandler)
+	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation))
 
 	return http.ListenAndServe(":"+config.Config.Port, router)
 }
@@ -49,11 +48,11 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
-	user := models.User{}
-	user.Name = "成功！！"
-	user.PassWord = "成功！！"
-	w.Header().Set("Content-Type", "application/json")
-	responseJSON(w, user)
+	// user := models.User{}
+	// user.Name = "成功！！"
+	// user.PassWord = "成功！！"
+	// w.Header().Set("Content-Type", "application/json")
+	// responseJSON(w, user)
 }
 
 func addMyWordHandler(w http.ResponseWriter, r *http.Request) {
