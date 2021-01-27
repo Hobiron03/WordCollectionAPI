@@ -15,4 +15,4 @@ RUN go get -u github.com/dgrijalva/jwt-go \
     && go get -u gopkg.in/go-ini/ini.v1
 
 COPY . /go/src/wordcollection
-CMD ["go", "run", "main.go", "$PORT"]
+CMD ["go", "run", "main.go"]
