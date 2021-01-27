@@ -89,3 +89,13 @@ func (w *Word) DeleteWord() (err error) {
 
 	return err
 }
+
+func (u *User) DeleteWordAll() (err error) {
+	cmd := `delete from words where user_id = ?`
+	_, err = Db.Exec(cmd, u.ID)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return err
+}

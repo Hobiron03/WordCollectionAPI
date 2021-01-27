@@ -77,10 +77,9 @@ func StartAPIServer() error {
 	router.HandleFunc("/validation", TokenVerifyMiddleWare(validation)).Methods("GET", "OPTIONS")
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowCredentials: false,
-		AllowedHeaders:   []string{"Authorization"},
-		// Enable Debugging for testing, consider disabling in production
+		AllowedOrigins:     []string{"*"},
+		AllowCredentials:   false,
+		AllowedHeaders:     []string{"Authorization"},
 		Debug:              true,
 		OptionsPassthrough: false,
 	})
@@ -181,14 +180,13 @@ func updateMyWordHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func allDeleteMyWordHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("TopHandler")
+	name := r.FormValue("username")
+	user, _ := models.GetUserByName(name)
+	user.DeleteWordAll()
 }
 
 func deleteUserHandler(w http.ResponseWriter, r *http.Request) {
-	var name string
-	name = r.FormValue("username")
-
+	name := r.FormValue("username")
 	user, _ := models.GetUserByName(name)
 	user.DeleteUser()
 }
