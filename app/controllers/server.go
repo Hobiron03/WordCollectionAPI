@@ -84,10 +84,13 @@ func StartAPIServer() error {
 		OptionsPassthrough: false,
 	})
 
-	port, _ := strconv.Atoi(os.Args[1])
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	handler := c.Handler(router)
-	return http.ListenAndServe(fmt.Sprintf(":%d", port), handler)
+	return http.ListenAndServe(fmt.Sprintf(":%s", port), handler)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
