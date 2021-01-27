@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"wordcollection/app/models"
-	"wordcollection/config"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -84,8 +84,10 @@ func StartAPIServer() error {
 		OptionsPassthrough: false,
 	})
 
+	port, _ := strconv.Atoi(os.Args[1])
+
 	handler := c.Handler(router)
-	return http.ListenAndServe(":"+config.Config.Port, handler)
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), handler)
 }
 
 func fetchMyWordHandler(w http.ResponseWriter, r *http.Request) {
