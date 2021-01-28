@@ -48,12 +48,14 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	authFrom.PassWord = r.FormValue("password")
 	if authFrom.Username == "" {
 		error.Message = "ユーザネームが入力されていません。"
+		fmt.Println("ユーザネームが入力されていません。")
 		respondWithError(w, http.StatusBadRequest, error)
 		return
 	}
 
 	if authFrom.PassWord == "" {
 		error.Message = "パスワードが入力されていません。"
+		fmt.Println("パスワードが入力されていません。")
 		respondWithError(w, http.StatusBadRequest, error)
 		return
 	}
@@ -64,6 +66,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	err := newUser.CreateUser()
 	if err != nil {
 		error.Message = "すでにその名前は使用されています"
+		fmt.Println("すでにその名前は使用されています")
 		respondWithError(w, http.StatusBadRequest, error)
 		return
 	}
@@ -82,14 +85,20 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 
 	authFrom.Username = r.FormValue("username")
 	authFrom.PassWord = r.FormValue("password")
+
+	fmt.Println("Username")
+	fmt.Println(authFrom.Username)
+
 	if authFrom.Username == "" {
 		error.Message = "ユーザネームが入力されていません。"
+		fmt.Println("ユーザネームが入力されていません")
 		respondWithError(w, http.StatusBadRequest, error)
 		return
 	}
 
 	if authFrom.PassWord == "" {
 		error.Message = "パスワードが入力されていません。"
+		fmt.Println("パスワードが入力されていません")
 		respondWithError(w, http.StatusBadRequest, error)
 		return
 	}
@@ -101,6 +110,7 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			error.Message = "ユーザが存在しません"
+			fmt.Println("ユーザが存在しません")
 			respondWithError(w, http.StatusBadRequest, error)
 			return
 		} else {
@@ -111,6 +121,7 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	hashedPassword := user.PassWord
 	if hashedPassword != models.Encrypt(password) {
 		error.Message = "パスワードが適切ではありません"
+		fmt.Println("パスワードが適切ではありません")
 		respondWithError(w, http.StatusUnauthorized, error)
 		return
 	}

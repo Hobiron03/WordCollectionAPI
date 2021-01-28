@@ -5,10 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"wordcollection/config"
+	"os"
 
 	"github.com/google/uuid"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/lib/pq"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 var Db *sql.DB
@@ -20,32 +21,68 @@ const (
 )
 
 func init() {
-	Db, err = sql.Open(config.Config.SQLDriver, config.Config.DbName)
-	fmt.Println(Db)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Db, err = sql.Open(config.Config.SQLDriver, config.Config.DbName)
+	// fmt.Println(Db)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
+	databaseURL := os.Getenv("DATABASE_URL")
+	pgURL, err := pq.ParseURL(databaseURL)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(pgURL)
+	Db, err = sql.Open("postgres", pgURL)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(Db)
+
+	//sqlite
+	// cmdU := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
+	// 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	// 	uuid STRING NOT NULL UNIQUE,
+	// 	name STRING UNIQUE,
+	// 	password STRING,
+	// 	created_at DATETIME)`, tableNameUser)
+	// _, err = Db.Exec(cmdU)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	//postgres
 	cmdU := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		uuid STRING NOT NULL UNIQUE,
-		name STRING UNIQUE,
-		password STRING,
-		created_at DATETIME)`, tableNameUser)
+		id SERIAL PRIMARY KEY,
+		uuid TEXT NOT NULL UNIQUE,
+		name TEXT UNIQUE,
+		password TEXT,
+		created_at TIMESTAMP)`, tableNameUser)
 	_, err = Db.Exec(cmdU)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	//sqlite
+	// cmdW := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
+	// 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	// 	user_id INTEGER,
+	// 	word TEXT,
+	// 	mean TEXT,
+	// 	pronounce TEXT,
+	// 	genre TEXT,
+	// 	color TEXT,
+	// 	created_at DATETIME)`, tableNameWord)
+
 	cmdW := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s(
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id SERIAL PRIMARY KEY,
 		user_id INTEGER,
 		word TEXT,
 		mean TEXT,
 		pronounce TEXT,
 		genre TEXT,
 		color TEXT,
-		created_at DATETIME)`, tableNameWord)
+		created_at TIMESTAMP)`, tableNameWord)
 	_, err = Db.Exec(cmdW)
 	if err != nil {
 		log.Fatalln(err)

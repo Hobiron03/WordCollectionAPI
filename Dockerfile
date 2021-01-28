@@ -11,7 +11,7 @@ RUN go get -u github.com/dgrijalva/jwt-go \
     && go get -u github.com/gorilla/mux \
     && go get -u github.com/rs/cors \
     && go get -u github.com/google/uuid \
-    && go get -u github.com/mattn/go-sqlite3 \
+    && go get -u github.com/lib/pq \
     && go get -u gopkg.in/go-ini/ini.v1
 
 COPY . /go/src/wordcollection

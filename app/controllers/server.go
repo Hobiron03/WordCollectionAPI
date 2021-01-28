@@ -87,6 +87,7 @@ func StartAPIServer() error {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
+		fmt.Println("Port is not attached")
 	}
 
 	handler := c.Handler(router)
