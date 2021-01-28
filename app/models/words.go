@@ -16,7 +16,7 @@ type Word struct {
 }
 
 func (u *User) CreateWord(word string, mean string, pronounce string, genre string, color string) (err error) {
-	cmd := `insert into words (user_id, word, mean, pronounce, genre, color, created_at) values (?, ?, ?, ?, ?, ?, ?)`
+	cmd := `insert into words (user_id, word, mean, pronounce, genre, color, created_at) values ($1, $2, $3, $4, $5, $6, $7)`
 
 	_, err = Db.Exec(cmd, u.ID, word, mean, pronounce, genre, color, time.Now())
 	if err != nil {
@@ -27,7 +27,7 @@ func (u *User) CreateWord(word string, mean string, pronounce string, genre stri
 }
 
 func (u *User) GetWordAll() (words []Word, err error) {
-	cmd := `select id, user_id, word, mean, pronounce, genre, color from words where user_id = ?`
+	cmd := `select id, user_id, word, mean, pronounce, genre, color from words where user_id = $1;`
 	rows, err := Db.Query(cmd, u.ID)
 
 	for rows.Next() {
@@ -44,7 +44,7 @@ func (u *User) GetWordAll() (words []Word, err error) {
 }
 
 func GetWord(id int) (word Word, err error) {
-	cmd := `select id, user_id, word, mean, pronounce, genre, color from words where id = ?`
+	cmd := `select id, user_id, word, mean, pronounce, genre, color from words where id = $1;`
 
 	err = Db.QueryRow(cmd, id).Scan(
 		&word.ID,
@@ -64,14 +64,14 @@ func GetWord(id int) (word Word, err error) {
 
 func (u *User) GetNewestWordID() (id int, err error) {
 	var newestID int
-	cmd := `select MAX(id) from words where user_id = ?`
+	cmd := `select MAX(id) from words where user_id = $1;`
 	err = Db.QueryRow(cmd, u.ID).Scan(&newestID)
 
 	return newestID, err
 }
 
 func (w *Word) UpdateWord() (err error) {
-	cmd := `update words set word = ?, mean = ?, pronounce = ?, genre = ?, color = ? where id = ?`
+	cmd := `update words set word = $1, mean = $2, pronounce = $3, genre = $4, color = $5 where id = $6;`
 	_, err = Db.Exec(cmd, w.Word, w.Mean, w.Pronounce, w.Genre, w.Color, w.ID)
 	if err != nil {
 		log.Fatalln(err)
@@ -81,7 +81,7 @@ func (w *Word) UpdateWord() (err error) {
 }
 
 func (w *Word) DeleteWord() (err error) {
-	cmd := `delete from words where id = ?`
+	cmd := `delete from words where id = $1;`
 	_, err = Db.Exec(cmd, w.ID)
 	if err != nil {
 		log.Fatalln(err)
@@ -91,7 +91,7 @@ func (w *Word) DeleteWord() (err error) {
 }
 
 func (u *User) DeleteWordAll() (err error) {
-	cmd := `delete from words where user_id = ?`
+	cmd := `delete from words where user_id = $1;`
 	_, err = Db.Exec(cmd, u.ID)
 	if err != nil {
 		log.Fatalln(err)

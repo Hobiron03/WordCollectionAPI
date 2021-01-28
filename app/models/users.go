@@ -18,7 +18,7 @@ func (u *User) CreateUser() (err error) {
 		uuid,
 		name,
 		password,
-		created_at) values (?, ?, ?, ?)`
+		created_at) values ($1, $2, $3, $4);`
 
 	_, err = Db.Exec(cmd, CreateUUID(), u.Name, Encrypt(u.PassWord), time.Now())
 
@@ -28,7 +28,7 @@ func (u *User) CreateUser() (err error) {
 func GetUserByID(id int) (user User, err error) {
 	user = User{}
 	cmd := `select id, uuid, name, password, created_at
-	from users where id = ?`
+	from users where id = $1;`
 
 	err = Db.QueryRow(cmd, id).Scan(
 		&user.ID,
@@ -44,7 +44,7 @@ func GetUserByID(id int) (user User, err error) {
 func GetUserByName(username string) (user User, err error) {
 	user = User{}
 	cmd := `select id, uuid, name, password, created_at
-	from users where name = ?`
+	from users where name = $1;`
 
 	err = Db.QueryRow(cmd, username).Scan(
 		&user.ID,
@@ -58,7 +58,7 @@ func GetUserByName(username string) (user User, err error) {
 }
 
 func (u *User) DeleteUser() (err error) {
-	cmd := `delete from users where id = ?`
+	cmd := `delete from users where id = $1;`
 	_, err = Db.Exec(cmd, u.ID)
 	if err != nil {
 		log.Fatalln(err)

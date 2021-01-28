@@ -66,7 +66,7 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	err := newUser.CreateUser()
 	if err != nil {
 		error.Message = "すでにその名前は使用されています"
-		fmt.Println("すでにその名前は使用されています")
+		fmt.Println(err)
 		respondWithError(w, http.StatusBadRequest, error)
 		return
 	}
